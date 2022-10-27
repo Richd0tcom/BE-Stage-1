@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -17,6 +18,10 @@ func main(){
 
 	//create a new app.
 	app := fiber.New()
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 
 	app.Get("/healthcheck", func(fiberContext *fiber.Ctx) error {
 		return fiberContext.SendString("OK")
@@ -31,5 +36,5 @@ func main(){
 
 		return fiberContext.JSON(user)
 	})
-	log.Fatal(app.Listen(":4000"))
+	log.Fatal(app.Listen(`:`+port))
 }
