@@ -24,7 +24,7 @@ func main(){
 	var user User
 
 	app.Get("/user", func(fiberContext *fiber.Ctx) error {
-		user.SlackUsername = "Richd0tcom"
+		user.SlackUsername = "Richdotcom"
 		user.Backend = true
 		user.Age = 23
 		user.Bio = "Creative, detail-oriented software developer"
