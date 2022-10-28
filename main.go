@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 type User struct {
 	SlackUsername string `json:"slackUsername"`
@@ -22,6 +23,8 @@ func main(){
 	if port == "" {
 		port = "8080"
 	}
+
+	app.Use(cors.New(cors.Config{AllowOrigins: "*"}))
 
 	app.Get("/healthcheck", func(fiberContext *fiber.Ctx) error {
 		return fiberContext.SendString("OK")
