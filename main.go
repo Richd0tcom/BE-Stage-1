@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -60,7 +61,7 @@ func main(){
 		if err := fiberContext.BodyParser(&sum); err != nil {
 			return err
 		}
-		res:= checkOperation(sum.OperationType, sum.X, sum.Y)
+		res:= checkOperation(strings.ToLower(sum.OperationType), sum.X, sum.Y)
 		result := OperationResponse{
 			SlackUsername: "Richdotcom",
 			OperationType: sum.OperationType,
