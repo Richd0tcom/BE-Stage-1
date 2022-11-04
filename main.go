@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -61,10 +62,10 @@ func main(){
 		if err := fiberContext.BodyParser(&sum); err != nil {
 			return err
 		}
-		res:= checkOperation(strings.ToLower(sum.OperationType), sum.X, sum.Y)
+		res, opType := checkOperation(strings.ToLower(sum.OperationType), sum.X, sum.Y)
 		result := OperationResponse{
 			SlackUsername: "Richdotcom",
-			OperationType: sum.OperationType,
+			OperationType: opType,
 			Result: res,
 		}
 		return fiberContext.JSON(result)
@@ -72,20 +73,39 @@ func main(){
 	log.Fatal(app.Listen(`:`+port))
 }
 
-func checkOperation(opType string, x int, y int) int {
+func checkOperation(opType string, x int, y int) (int, string){
+	var add = regexp.MustCompile(`add|sum|summation|plus|addition`)
+	var subtract = regexp.MustCompile(`subtract|minus|subtraction`)
+	var multiply  = regexp.MustCompile(`multiply|multiplication|product`)
 	var re int
+	var operationType string
 	switch {
 		case opType == "addition":
 			re= x + y
+			operationType = "addition"
 			break
 		case opType == "subtraction":
 			re= x - y
+			operationType = "subtraction"
 			break
 		case opType == "multiplication":
 			re= x * y
+			operationType = "multiplication"
+			break
+		case add.MatchString(opType):
+			re= x + y
+			operationType = "addition"
+			break
+		case subtract.MatchString(opType):
+			re= x - y
+			operationType = "subtraction"
+			break
+		case multiply.MatchString(opType):
+			re= x * y
+			operationType = "multiplication"
 			break
 
 	}
 
-	return re
+	return re, operationType
 }
