@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"regexp"
-	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -24,12 +23,21 @@ type OperationRequest struct {
 }
 
 type OperationResponse struct {
-	SlackUsername string `json:"slackUsername"`
+	SlackUsername string `json:"slack_name"`
 	Result int `json:"result"`
 	OperationType string `json:"operation_type"`
 	
 }
 
+type HngXStageOneResponse struct {
+	SlackUsername string `json:"slack_name"`
+	CurrentDay string `json:"current_day"`
+	UtcTime time.Time `json:"utc_time"`
+	Track string `json:"track"`
+	GithubFileUrl string `json:"github_file_url"`
+	GithubRepoUrl string `json:"github_repo_url"`
+	StatusCode int `json:"status_code"`
+}
 func main(){
 	fmt.Print("Hello, world!")
 
@@ -45,67 +53,25 @@ func main(){
 	app.Get("/healthcheck", func(fiberContext *fiber.Ctx) error {
 		return fiberContext.SendString("OK")
 	})
-	var user User
 
-	app.Get("/user", func(fiberContext *fiber.Ctx) error {
-		user.SlackUsername = "Richdotcom"
-		user.Backend = true
-		user.Age = 23
-		user.Bio = "Creative, detail-oriented software developer"
+	
 
-		return fiberContext.JSON(user)
-	})
+	app.Get("/hngx/details", func(fiberContext *fiber.Ctx) error {
+	
+		track := fiberContext.Query("track")
+		slack_user := fiberContext.Query("slack_name")
+		result := HngXStageOneResponse{
 
-	app.Post("/operation", func(fiberContext *fiber.Ctx) error {
-		sum := OperationRequest{}
-
-		if err := fiberContext.BodyParser(&sum); err != nil {
-			return err
-		}
-		res, opType := checkOperation(strings.ToLower(sum.OperationType), sum.X, sum.Y)
-		result := OperationResponse{
-			SlackUsername: "Richdotcom",
-			OperationType: opType,
-			Result: res,
+			SlackUsername: slack_user,
+			CurrentDay: time.Weekday.String(time.Now().Weekday()),
+			UtcTime: time.Now(),
+			Track: track,
+			GithubFileUrl: "https://github.com/Richd0tcom/BE-Stage-1/blob/main/main.go",
+			GithubRepoUrl: "https://github.com/Richd0tcom/BE-Stage-1",
+			StatusCode: 200,
 		}
 		return fiberContext.JSON(result)
 	})
 	log.Fatal(app.Listen(`:`+port))
 }
 
-func checkOperation(opType string, x int, y int) (int, string){
-	var add = regexp.MustCompile(`add|sum|summation|plus|addition`)
-	var subtract = regexp.MustCompile(`subtract|minus|subtraction`)
-	var multiply  = regexp.MustCompile(`multiply|multiplication|product`)
-	var re int
-	var operationType string
-	switch {
-		case opType == "addition":
-			re= x + y
-			operationType = "addition"
-			break
-		case opType == "subtraction":
-			re= x - y
-			operationType = "subtraction"
-			break
-		case opType == "multiplication":
-			re= x * y
-			operationType = "multiplication"
-			break
-		case add.MatchString(opType):
-			re= x + y
-			operationType = "addition"
-			break
-		case subtract.MatchString(opType):
-			re= x - y
-			operationType = "subtraction"
-			break
-		case multiply.MatchString(opType):
-			re= x * y
-			operationType = "multiplication"
-			break
-
-	}
-
-	return re, operationType
-}
