@@ -56,7 +56,7 @@ func main(){
 
 	
 
-	app.Get("/hngx/details", func(fiberContext *fiber.Ctx) error {
+	app.Get("/api", func(fiberContext *fiber.Ctx) error {
 	
 		track := fiberContext.Query("track")
 		slack_user := fiberContext.Query("slack_name")
