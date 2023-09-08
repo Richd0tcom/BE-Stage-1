@@ -32,7 +32,7 @@ type OperationResponse struct {
 type HngXStageOneResponse struct {
 	SlackUsername string `json:"slack_name"`
 	CurrentDay string `json:"current_day"`
-	UtcTime time.Time `json:"utc_time"`
+	UtcTime string `json:"utc_time"`
 	Track string `json:"track"`
 	GithubFileUrl string `json:"github_file_url"`
 	GithubRepoUrl string `json:"github_repo_url"`
@@ -64,7 +64,7 @@ func main(){
 
 			SlackUsername: slack_user,
 			CurrentDay: time.Weekday.String(time.Now().Weekday()),
-			UtcTime: time.Now(),
+			UtcTime: time.Now().UTC().Format("RFC3339"),
 			Track: track,
 			GithubFileUrl: "https://github.com/Richd0tcom/BE-Stage-1/blob/main/main.go",
 			GithubRepoUrl: "https://github.com/Richd0tcom/BE-Stage-1",
