@@ -64,7 +64,7 @@ func main(){
 
 			SlackUsername: slack_user,
 			CurrentDay: time.Weekday.String(time.Now().Weekday()),
-			UtcTime: time.Now().UTC().Format("RFC3339"),
+			UtcTime: time.Now().UTC().Format(time.RFC3339),
 			Track: track,
 			GithubFileUrl: "https://github.com/Richd0tcom/BE-Stage-1/blob/main/main.go",
 			GithubRepoUrl: "https://github.com/Richd0tcom/BE-Stage-1",
