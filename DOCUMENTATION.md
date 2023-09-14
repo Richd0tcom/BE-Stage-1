@@ -84,3 +84,5 @@ Dynamic parameter handling: You can also delete a user by their name by passing 
 
 
 ## UML Diagram
+![UML API diagram](https://github.com/Richd0tcom/BE-Stage-1/assets/86890896/8b3abfb0-cce3-4466-8e8c-c13d68d710fc)
+
