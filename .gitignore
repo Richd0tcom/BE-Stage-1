@@ -17,5 +17,3 @@
 #environment variables
 .env
 *.env
-
-makefile
